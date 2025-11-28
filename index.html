@@ -299,13 +299,21 @@ function StopLoadContent() {
     }
 }
 
+function SpinRefreshButton() {
+    const rotation = Number(refresh.style.rotate.replace("deg","") || 0);
+
+    requestAnimationFrame(() => {
+        refresh.style.rotate = `${rotation + 360}deg`;
+    });
+}
+
 function RefreshContent() {
     console.log("refresh")
     bustCache = true;
 
     if (isFileContent) {
         frame.srcdoc = frame.srcdoc;
-        showStopLoad();
+        SpinRefreshButton()
     } else {
         if (frame.src !== cacheBustedURL) {
             input.value = frame.src;
@@ -318,11 +326,7 @@ function RefreshContent() {
 function ContentLoaded() {
     console.log("Loaded");
     showRefresh();
-    const rotation = Number(refresh.style.rotate.replace("deg","") || 0);
-
-    requestAnimationFrame(() => {
-        refresh.style.rotate = `${rotation + 360}deg`;
-    });
+    SpinRefreshButton()
     
     if ((!isFileContent) && (frame.src !== cacheBustedURL)) {
         input.value = frame.src;
@@ -376,7 +380,6 @@ function OpenFile(file) {
 
     reader.onload = ()=>{
         frame.srcdoc = reader.result
-        showStopLoad()
     }
 
     reader.readAsText(file);
