@@ -127,6 +127,7 @@
 <script>
 function openPopup(instant=false) {
     let failed = false;
+    let quotaReached = false;
     let w;
 
     const dayLog = JSON.parse(localStorage.getItem("DailyAccessLog") || '{"now":"","count":0}')
@@ -150,8 +151,8 @@ function openPopup(instant=false) {
         weekLog.now = week
     }
 
-    if (dayLog.count>=2) throw "Daily quota reached";
-    if (dayLog.count>=4) throw "Weekly quota reached";
+    if (dayLog.count>=2) throw "quota reached";
+    if (dayLog.count>=4) throw "quota reached";
 
     w = open("")
     w.applicationDocsrc = document.documentElement.outerHTML;
@@ -165,6 +166,7 @@ function openPopup(instant=false) {
     weekLog.count++
 
     } catch (e) {
+        if (e=="quota reached") quotaReached = true;
         console.error(e)
         failed = true
     }
@@ -172,7 +174,7 @@ function openPopup(instant=false) {
     localStorage.setItem("DailyAccessLog",JSON.stringify(dayLog))
     localStorage.setItem("WeeklyAccessLog",JSON.stringify(weekLog))
 
-    if (instant && failed) return;
+    if (instant && (failed && !quotaReached)) return;
     close();
     document.body.innerHTML = ""
     location.href="about:blank";
