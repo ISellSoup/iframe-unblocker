@@ -1,3 +1,2 @@
-This is a simple tool to bypass Goguardian, it is very limited
-
-Don't use this if your teacher doesn't want you to.
+This is a basic standalone iframe unblocker. 
+It is fully client-sided, and has been designed to be easy to use.
